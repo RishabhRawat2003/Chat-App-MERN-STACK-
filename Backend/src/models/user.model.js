@@ -25,13 +25,25 @@ const userSchema = new Schema(
             trim: true,
             lowercase: true
         },
-        description: {
+        bio: {
             type: String,
         },
         profileImage: {
             type: String,
             required: true
         },
+        followers: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
+        following: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
         post: [
             {
                 type: Schema.Types.ObjectId,

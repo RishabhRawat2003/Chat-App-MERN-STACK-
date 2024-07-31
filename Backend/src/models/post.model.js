@@ -8,15 +8,20 @@ const postSchema = new Schema(
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'User',
+            required: true
         },
-        like: {
-            type: Schema.Types.ObjectId,
-            ref: 'Like',
-        },
-        comments: {
-            type: Schema.Types.ObjectId,
-            ref: 'Comment',
-        },
+        like: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Like',
+            }
+        ],
+        comments: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Comment',
+            }
+        ],
         image: {
             type: String,
             required: true
