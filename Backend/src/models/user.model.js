@@ -30,7 +30,11 @@ const userSchema = new Schema(
         },
         profileImage: {
             type: String,
-            required: true
+            default: '/temp/default.jpg'
+        },
+        isActive: {
+            type: Boolean,
+            default: true
         },
         followers: [
             {

@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose"
 
 const postSchema = new Schema(
     {
-        description: {
+        caption: {
             type: String
         },
         owner: {
