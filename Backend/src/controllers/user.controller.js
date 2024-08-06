@@ -20,7 +20,7 @@ const userRegister = asyncHandler(async (req, res) => {
         {
             fullName,
             email,
-            username: username.toLowerCase(),
+            username,
             password
         }
     )
