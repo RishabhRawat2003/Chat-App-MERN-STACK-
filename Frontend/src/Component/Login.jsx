@@ -3,8 +3,15 @@ import { NavLink } from 'react-router-dom';
 import { PiHandWavingFill } from "react-icons/pi";
 import googleLogo from './Image/google.png'
 import { MdArrowOutward } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+
+    // function navigateToMain() {
+    //     const navigate = useNavigate();
+    //     navigate("/");
+    // }
+
     return (
         <>
             <div className='w-[90%] h-auto mx-auto my-8 flex flex-col sm:w-[60%] md:w-[50%] lg:w-[40%] xl:w-[30%] 2xl:w-[25%]'>
@@ -37,7 +44,7 @@ function Login() {
                     </div>
                 </div>
                 <button className='mx-4 h-12 bg-blue-500 text-white rounded-lg mb-6'>Login</button>
-                <p className='text-sm font-semibold text-gray-500 mb-3 flex justify-center'>Not registered yet? <NavLink to='/register' className='text-blue-600 flex items-center ml-1 active:underline active:underline-offset-4 md:cursor-pointer md:hover:underline md:hover:underline-offset-4 select-none'>Create an account <MdArrowOutward size={15} /></NavLink></p>
+                <p className='text-sm font-semibold text-gray-500 mb-3 flex justify-center'>Not registered yet? <NavLink to='register' className='text-blue-600 flex items-center ml-1 active:underline active:underline-offset-4 md:cursor-pointer md:hover:underline md:hover:underline-offset-4 select-none'>Create an account <MdArrowOutward size={15} /></NavLink></p>
             </div>
         </>
     )

@@ -6,6 +6,7 @@ function App() {
   return (
     <>
       <Outlet />
+      <h1>hello</h1>
     </>
   )
 }

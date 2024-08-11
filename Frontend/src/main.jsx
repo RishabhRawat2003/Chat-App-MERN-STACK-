@@ -10,20 +10,15 @@ import Chat from './Component/Chat.jsx'
 import Search from './Component/Search.jsx'
 import Camera from './Component/Camera.jsx'
 import Profile from './Component/Profile.jsx'
+import './customcss.css'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<App />}>
-        <Route path='/' element={<Login />} />
-        <Route path='/register' element={<Register />} />
+      <Route path="/" element={<App />} >
+        <Route path="/" element={<Login />} />
+        <Route path="register" element={<Register />} />
       </Route>
-      {/* <Route path='/chat' element={<MainRoutes />}>
-        <Route path='/chat' element={<Chat />} />
-        <Route path='/search' element={<Search />} />
-        <Route path='/camera' element={<Camera />} />
-        <Route path='/profile' element={<Profile />} />
-      </Route> */}
     </>
   )
 )
