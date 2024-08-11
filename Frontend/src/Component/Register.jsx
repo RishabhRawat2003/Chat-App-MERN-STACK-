@@ -55,14 +55,12 @@ function Register() {
       setLoading(true)
       axios.post('http://localhost:8000/api/v1/users/register', form)
         .then((response) => {
-          console.log(response.data);
           setTimeout(() => {
             setForm({ username: '', fullName: '', email: '', password: '', })
             setLoading(false)
             setMessage(true)
           }, 2000);
         }).catch((error) => {
-          console.log(error.response.data);
           setLoading(false)
           setErrorMessage(true)
         })
@@ -100,7 +98,7 @@ function Register() {
           <input type="text" placeholder="E.g. alex@gmail.com" name='email' value={form.email} onChange={handleChange} className='px-2 border-2 h-10 rounded-md mb-3' required />
 
           <p className='font-semibold'>Password</p>
-          <div className='h-10 rounded-md mb-3 w-full relative flex items-center'><input type="password" placeholder="Create password" name='password' value={form.password} onChange={handleChange} className='px-2 border-2 w-full h-full rounded-md relative z-10' required /><span className='absolute right-1 px-1 z-20 bg-white' onClick={passwordShow}>{showPassword ? <IoEyeOff size={25} /> : <IoEye size={25} />}</span></div>
+          <div className='h-10 rounded-md mb-3 w-full relative flex items-center'><input type="password" placeholder="Create password" name='password' value={form.password} onChange={handleChange} className='px-2 border-2 w-full h-full rounded-md relative z-10' required /><span className='absolute right-1 px-1 z-20 bg-white' onClick={passwordShow}>{showPassword ? <IoEye size={25} /> : <IoEyeOff size={25} />}</span></div>
 
         </div>
         <button onClick={submitForm} className='mx-4 h-12 bg-blue-500 text-white rounded-lg mb-6 active:bg-blue-600 md:hover:bg-blue-600'>Sign Up</button>

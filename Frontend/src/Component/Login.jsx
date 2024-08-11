@@ -1,16 +1,83 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { json, NavLink } from 'react-router-dom';
 import { PiHandWavingFill } from "react-icons/pi";
 import googleLogo from './Image/google.png'
 import { MdArrowOutward } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import { FiAlertTriangle } from "react-icons/fi";
+import { IoEyeOff } from "react-icons/io5";
+import { IoEye } from "react-icons/io5";
+import axios from 'axios';
 
 function Login() {
 
-    // function navigateToMain() {
-    //     const navigate = useNavigate();
-    //     navigate("/");
-    // }
+    const [loading, setLoading] = useState(false)
+    const [popUp, setPopUp] = useState(false)
+    const [errorMessage, setErrorMessage] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [form, setForm] = useState({
+        email: "",
+        username: "",
+        password: "",
+    })
+    const navigate = useNavigate()
+
+    function handleChange(event) {
+        const { name, value } = event.target;
+        setForm(prevForm => {
+            if (name === "email") {
+                return {
+                    ...prevForm,
+                    email: value,
+                    username: value
+                };
+            } else {
+                return {
+                    ...prevForm,
+                    [name]: value
+                };
+            }
+        });
+    }
+
+    function closePopUp() {
+        setPopUp(false)
+        setErrorMessage(false)
+    }
+
+    function passwordShow() {
+        setShowPassword(!showPassword)
+        const password = document.getElementsByName('password')
+        if (password[0].type === 'password') {
+            password[0].type = 'text'
+        } else {
+            password[0].type = 'password'
+        }
+    }
+
+    function loginUser() {
+        if (form.username !== '' && form.email !== '' && form.password !== '') {
+            setPopUp(true)
+            setLoading(true)
+            axios.post('http://localhost:8000/api/v1/users/login', form)
+                .then((response) => {
+                    setTimeout(() => {
+                        setForm({
+                            email: "",
+                            username: "",
+                            password: "",
+                        })
+                        setLoading(false)
+                        setPopUp(false)
+                        localStorage.setItem('user', JSON.stringify(true))
+                        navigate('/')
+                    }, 3000);
+                }).catch((error) => {
+                    setLoading(false)
+                    setErrorMessage(true)
+                })
+        }
+    }
 
     return (
         <>
@@ -26,11 +93,22 @@ function Login() {
                     <span className='w-[127%] text-xs text-gray-400 font-semibold text-center'>or Login with Email</span>
                     <p className='w-full h-[1px] bg-gray-400'></p>
                 </div>
-                <div className='flex flex-col h-auto mx-4 gap-2'>
-                    <p className='font-semibold'>Email</p>
-                    <input type="text" placeholder="E.g. alex@gmail.com" className='px-2 border-2 h-10 rounded-md mb-3' />
+                <div className='flex flex-col h-auto mx-4 gap-2 relative z-10'>
+                    <p className='font-semibold'>Email or Username</p>
+                    <input type="text" placeholder="E.g. alex@gmail.com" name='email' value={form.email} onChange={handleChange} className='px-2 border-2 h-10 rounded-md mb-3' required />
+                    <div className={popUp ? 'absolute z-30 w-full items-center justify-center h-48 flex flex-col bg-blue-500 border-2 border-blue-500 rounded-lg shadow-xl' : 'hidden'}>
+                        <div className={loading ? "rounded-lg w-full z-20 flex flex-col items-center" : "hidden"}>
+                            <div className="spinner"></div>
+                            <p className='mt-7 font-bold'>Logging, Please Wait ...</p>
+                        </div>
+                        <div className={errorMessage ? 'flex flex-col w-full items-center rounded-xl' : 'hidden'}>
+                            <div className='text-center flex mt-4'><span className='p-3 border-[1px] border-black rounded-full'><FiAlertTriangle size={40} className='text-yellow-500' /></span></div>
+                            <p className='text-base font-bold mt-2'>Invalid Username or Password</p>
+                            <button onClick={closePopUp} className='bg-green-400 px-7 py-2 rounded-lg mt-4 font-semibold border-[1px] border-green-400 active:bg-green-500 md:hover:bg-green-500'>Ok</button>
+                        </div>
+                    </div>
                     <p className='font-semibold'>Password</p>
-                    <input type="password" placeholder="Enter your password" className='px-2 border-2 h-10 rounded-md mb-3' />
+                    <div className='h-10 rounded-md mb-3 w-full relative flex items-center'><input type="password" placeholder="Enter your password" name='password' value={form.password} onChange={handleChange} className='px-2 border-2 w-full h-full rounded-md relative z-10' required /><span className='absolute right-1 px-1 z-20 bg-white' onClick={passwordShow}>{showPassword ? <IoEye size={25} /> : <IoEyeOff size={25} />}</span></div>
                 </div>
                 <div className='mx-4 flex justify-between mb-4'>
                     <div className='flex gap-2 items-center justify-center'>
@@ -43,7 +121,7 @@ function Login() {
                         <span className='text-blue-500 text-sm font-semibold md:cursor-pointer md:hover:underline md:hover:underline-offset-4 active:underline active:underline-offset-4 select-none'>Forgot Password?</span>
                     </div>
                 </div>
-                <button className='mx-4 h-12 bg-blue-500 text-white rounded-lg mb-6'>Login</button>
+                <button onClick={loginUser} className='mx-4 h-12 bg-blue-500 text-white rounded-lg mb-6'>Login</button>
                 <p className='text-sm font-semibold text-gray-500 mb-3 flex justify-center'>Not registered yet? <NavLink to='register' className='text-blue-600 flex items-center ml-1 active:underline active:underline-offset-4 md:cursor-pointer md:hover:underline md:hover:underline-offset-4 select-none'>Create an account <MdArrowOutward size={15} /></NavLink></p>
             </div>
         </>

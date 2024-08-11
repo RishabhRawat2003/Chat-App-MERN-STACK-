@@ -15,9 +15,15 @@ import './customcss.css'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<App />} >
-        <Route path="/" element={<Login />} />
+      <Route path="/login" element={<App />} >
+        <Route path="/login" element={<Login />} />
         <Route path="register" element={<Register />} />
+      </Route>
+      <Route path="/" element={<MainRoutes />} >
+        <Route path="/" element={<Profile />} />
+        <Route path="/camera" element={<Camera />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/chat" element={<Chat />} />
       </Route>
     </>
   )
