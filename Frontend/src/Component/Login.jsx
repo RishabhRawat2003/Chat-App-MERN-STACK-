@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiAlertTriangle } from "react-icons/fi";
 import { IoEyeOff } from "react-icons/io5";
 import { IoEye } from "react-icons/io5";
+import Cookies from 'js-cookie'
 import axios from 'axios';
 
 function Login() {
@@ -61,6 +62,9 @@ function Login() {
             setLoading(true)
             axios.post('http://localhost:8000/api/v1/users/login', form)
                 .then((response) => {
+                    const { accessToken, refreshToken } = response.data.data
+                    Cookies.set('accessToken', accessToken, { expires: 1, sameSite: 'None', secure: true });
+                    Cookies.set('refreshToken', refreshToken, { expires: 10, sameSite: 'None', secure: true });
                     setTimeout(() => {
                         setForm({
                             email: "",
@@ -69,7 +73,6 @@ function Login() {
                         })
                         setLoading(false)
                         setPopUp(false)
-                        localStorage.setItem('user', JSON.stringify(true))
                         navigate('/')
                     }, 3000);
                 }).catch((error) => {
@@ -96,15 +99,25 @@ function Login() {
                 <div className='flex flex-col h-auto mx-4 gap-2 relative z-10'>
                     <p className='font-semibold'>Email or Username</p>
                     <input type="text" placeholder="E.g. alex@gmail.com" name='email' value={form.email} onChange={handleChange} className='px-2 border-2 h-10 rounded-md mb-3' required />
-                    <div className={popUp ? 'absolute z-30 w-full items-center justify-center h-48 flex flex-col bg-blue-500 border-2 border-blue-500 rounded-lg shadow-xl' : 'hidden'}>
-                        <div className={loading ? "rounded-lg w-full z-20 flex flex-col items-center" : "hidden"}>
-                            <div className="spinner"></div>
-                            <p className='mt-7 font-bold'>Logging, Please Wait ...</p>
+                    <div className={popUp ? 'absolute z-30 w-full items-center justify-center h-auto flex flex-col rounded-lg shadow-xl' : 'hidden'}>
+                        {/* <div className={popUp ? 'absolute z-30 w-full items-center justify-center h-48 flex flex-col bg-blue-500 border-2 border-blue-500 rounded-lg shadow-xl' : 'hidden'}> */}
+                        <div className={`${loading ? "rounded-lg w-full z-20 flex flex-col items-center justify-center bg-gray-100 p-6 border border-gray-300 shadow-lg" : "hidden"} transition-opacity duration-300 ease-in-out`}>
+                            <div className="spinner border-t-4 mt-5 border-blue-500 border-solid rounded-full w-16 h-16 animate-spin"></div>
+                            <p className='mt-7 mb-3 font-bold text-gray-700 text-lg'>Logging in, please wait...</p>
                         </div>
-                        <div className={errorMessage ? 'flex flex-col w-full items-center rounded-xl' : 'hidden'}>
-                            <div className='text-center flex mt-4'><span className='p-3 border-[1px] border-black rounded-full'><FiAlertTriangle size={40} className='text-yellow-500' /></span></div>
-                            <p className='text-base font-bold mt-2'>Invalid Username or Password</p>
-                            <button onClick={closePopUp} className='bg-green-400 px-7 py-2 rounded-lg mt-4 font-semibold border-[1px] border-green-400 active:bg-green-500 md:hover:bg-green-500'>Ok</button>
+                        <div className={`${errorMessage ? 'flex flex-col w-full max-w-sm p-6 items-center bg-red-100 border border-red-300 shadow-md rounded-lg' : 'hidden'} transition-transform duration-300 ease-in-out`}>
+                            <div className='text-center flex justify-center mt-2'>
+                                <span className='p-3 border-[1px] border-red-300 rounded-full bg-red-50'>
+                                    <FiAlertTriangle size={40} className='text-red-500' />
+                                </span>
+                            </div>
+                            <p className='text-base font-bold mt-4 text-red-700'>Invalid Username or Password</p>
+                            <button
+                                onClick={closePopUp}
+                                className='bg-red-500 text-white px-7 py-2 rounded-lg mt-6 font-semibold border-[1px] border-red-500 transition transform duration-200 ease-in-out hover:bg-red-600 hover:-translate-y-1 active:bg-red-700'
+                            >
+                                Ok
+                            </button>
                         </div>
                     </div>
                     <p className='font-semibold'>Password</p>
@@ -121,7 +134,7 @@ function Login() {
                         <span className='text-blue-500 text-sm font-semibold md:cursor-pointer md:hover:underline md:hover:underline-offset-4 active:underline active:underline-offset-4 select-none'>Forgot Password?</span>
                     </div>
                 </div>
-                <button onClick={loginUser} className='mx-4 h-12 bg-blue-500 text-white rounded-lg mb-6'>Login</button>
+                <button onClick={loginUser} className='mx-4 h-12 bg-blue-500 text-white rounded-lg mb-6 active:bg-blue-600 md:hover:bg-blue-600'>Login</button>
                 <p className='text-sm font-semibold text-gray-500 mb-3 flex justify-center'>Not registered yet? <NavLink to='register' className='text-blue-600 flex items-center ml-1 active:underline active:underline-offset-4 md:cursor-pointer md:hover:underline md:hover:underline-offset-4 select-none'>Create an account <MdArrowOutward size={15} /></NavLink></p>
             </div>
         </>

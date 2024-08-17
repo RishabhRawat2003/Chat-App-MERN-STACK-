@@ -10,6 +10,7 @@ import Chat from './Component/Chat.jsx'
 import Search from './Component/Search.jsx'
 import Camera from './Component/Camera.jsx'
 import Profile from './Component/Profile.jsx'
+import UpdateDetails from './Component/UpdateDetails.jsx'
 import './customcss.css'
 
 const router = createBrowserRouter(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
         <Route path="/camera" element={<Camera />} />
         <Route path="/search" element={<Search />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/update" element={<UpdateDetails />} />
       </Route>
     </>
   )

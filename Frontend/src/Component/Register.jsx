@@ -48,7 +48,7 @@ function Register() {
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
-  
+
   function submitForm() {
     if (form.username !== '' && form.fullName !== '' && form.email !== '' && form.password !== '') {
       setPopUp(true)
@@ -78,20 +78,38 @@ function Register() {
 
           <p className='font-semibold'>Username</p>
           <input type="text" placeholder="Create Username" name='username' value={form.username} onChange={handleChange} className='px-2 border-2 h-10 rounded-md mb-3' required />
-          <div className={popUp ? 'absolute z-30 w-full items-center justify-center translate-y-[50%] h-48 flex flex-col bg-blue-500 border-2 border-blue-500 rounded-lg shadow-xl' : 'hidden'}>
-            <div className={loading ? "rounded-lg w-full z-20 flex flex-col items-center" : "hidden"}>
-              <div className="spinner"></div>
-              <p className='mt-7 font-bold'>Registering, please wait...</p>
+          <div className={`${popUp ? "flex flex-col" : "flex flex-col"} absolute z-30 w-full items-center justify-center translate-y-[40%] h-auto rounded-lg shadow-xl`} >
+            <div className={`${loading ? "flex" : "hidden"} rounded-lg w-full z-20 bg-gray-100 border border-gray-300 flex-col items-center p-8`}>
+              <div className="spinner border-t-4 mt-4 border-white rounded-full w-16 h-16 animate-spin"></div>
+              <p className='mt-6 font-semibold text-gray-900 text-lg mb-3'>Registering ...</p>
             </div>
-            <div className={message ? 'flex flex-col w-full items-center rounded-xl' : 'hidden'}>
-              <div className='text-center flex mt-4'><span className='p-3 border-[1px] border-black rounded-full'><TiTick size={40} className='text-green-500' /></span></div>
-              <p className='text-base font-bold mt-2'>Account Created</p>
-              <button onClick={backToLogIn} className='bg-green-400 px-7 py-2 rounded-lg mt-4 font-semibold border-[1px] border-green-400 active:bg-green-500 md:hover:bg-green-500'>Log In</button>
+            <div className={`${message ? 'flex' : 'hidden'} flex-col w-full items-center bg-gray-100 border border-gray-300 rounded-lg p-6 shadow-lg`} >
+              <div className='text-center flex mt-1'>
+                <span className='p-4 border-2 border-green-500 rounded-full bg-green-100'>
+                  <TiTick size={40} className='text-green-500' />
+                </span>
+              </div>
+              <p className='text-lg font-bold mt-1 text-gray-800'>Account Created</p>
+              <button
+                onClick={backToLogIn}
+                className='bg-green-500 text-white px-8 py-3 rounded-lg mt-6 font-semibold border-2 border-green-500 active:bg-green-600 md:hover:bg-green-600 transition-colors duration-200'
+              >
+                Log In
+              </button>
             </div>
-            <div className={errorMessage ? 'flex flex-col w-full items-center rounded-xl' : 'hidden'}>
-              <div className='text-center flex mt-4'><span className='p-3 border-[1px] border-black rounded-full'><FiAlertTriangle size={40} className='text-yellow-500' /></span></div>
-              <p className='text-base font-bold mt-2'>Username or Email Already exists</p>
-              <button onClick={closePopUp} className='bg-green-400 px-7 py-2 rounded-lg mt-4 font-semibold border-[1px] border-green-400 active:bg-green-500 md:hover:bg-green-500'>Ok</button>
+            <div className={`${errorMessage ? 'flex flex-col w-full items-center p-6 bg-red-100 border border-red-300 shadow-lg rounded-lg' : 'hidden'} transition duration-300 ease-in-out`}>
+              <div className='text-center flex justify-center mt-4'>
+                <span className='p-3 border-[1px] border-red-300 rounded-full bg-red-50'>
+                  <FiAlertTriangle size={40} className='text-red-500' />
+                </span>
+              </div>
+              <p className='text-base font-bold mt-4 text-red-700'>Username or Email Already Exists</p>
+              <button
+                onClick={closePopUp}
+                className='bg-red-500 text-white px-7 py-2 rounded-lg mt-6 font-semibold border-[1px] border-red-500 transition transform duration-200 ease-in-out hover:bg-red-600 hover:-translate-y-1 active:bg-red-700'
+              >
+                Ok
+              </button>
             </div>
           </div>
           <p className='font-semibold'>Email</p>

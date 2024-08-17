@@ -27,10 +27,12 @@ const userSchema = new Schema(
         },
         bio: {
             type: String,
+            trim: true,
+            default: ''
         },
         profileImage: {
             type: String,
-            default: '/temp/default.jpg'
+            default: `/temp/default.jpg`
         },
         isActive: {
             type: Boolean,
