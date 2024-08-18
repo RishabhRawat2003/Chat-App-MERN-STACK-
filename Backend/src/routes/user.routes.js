@@ -13,6 +13,6 @@ router.route('/refresh-token').post(refreshAccessToken)
 router.route('/user-details').post(verifyJwt, userDetails)
 router.route('/change-password').post(verifyJwt, changeCurrentPassword)
 router.route('/update-account-details').post(verifyJwt, updateAccountDetails)
-router.route('/update-profile-image').post(verifyJwt, updateProfileImage)
+router.route('/update-profile-image').post(verifyJwt, upload.single('profileImage'), updateProfileImage)
 
 export default router

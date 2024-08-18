@@ -6,6 +6,7 @@ import { HiBars3 } from "react-icons/hi2";
 const server = import.meta.env.VITE_SERVER
 
 function Profile() {
+  const [defaultProfile, setDefaultProfile] = useState(true)
   const [data, setData] = useState({
     username: '',
     fullName: '',
@@ -21,6 +22,7 @@ function Profile() {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
+
       try {
         const accessToken = await getValidAccessToken();
 
@@ -31,7 +33,9 @@ function Profile() {
         });
         // console.log(response.data.data)
         const { username, fullName, followers, following, post, profileImage, bio } = response.data.data
-
+        if (profileImage !== '/temp/default.jpg') {
+          setDefaultProfile(false)
+        }
         setData({
           username,
           fullName,
@@ -41,15 +45,15 @@ function Profile() {
           profileImage,
           bio
         })
-
       } catch (error) {
-        // console.error('Error fetching user details:', error);
+        console.error('Error fetching user details:', error);
         navigate('/login')
       }
     };
     fetchUserDetails();
 
   }, [])
+  const bioLines = data.bio.trim().split('\n');
 
   if (!user) {
     return (
@@ -64,7 +68,7 @@ function Profile() {
         <div className='w-full h-10 border-b-[1px] border-gray-500 flex items-center justify-end sm:border-x-[1px]'><HiBars3 size={30} className='mr-3' /></div>
         <p className='text-xl font-semibold ml-3 my-2 xl:text-2xl'>{data.username}</p>
         <div className='flex my-3 justify-between'>
-          <img src={server + data.profileImage} alt="profile image" className='w-28 ml-4 xl:w-32' />
+          <img src={defaultProfile ? server + '/temp/default.jpg' : data.profileImage} alt="profile image" className='w-28 h-28 ml-4 xl:h-32 xl:w-32 rounded-full border-2' />
           <div className='flex flex-col mr-5 justify-between lg:mr-10'>
             <div className='flex'>
               <div className='flex flex-col items-center mx-6 sm:mx-3 md:mx-4 xl:mx-6'>
@@ -80,10 +84,19 @@ function Profile() {
                 <p className='text-lg font-semibold sm:text-base md:text-lg xl:text-xl'>Following</p>
               </div>
             </div>
-            <NavLink to='update' className='py-1.5 w-full text-center border-[1px] border-black rounded-lg cursor-pointer sm:w-[80%] sm:mx-auto sm:py-1 md:py-1.5 md:w-full'>Edit Profile</NavLink>
+            {/* <NavLink to='update' className='py-1.5 w-full text-center border-[1px] border-black rounded-lg cursor-pointer sm:w-[80%] sm:mx-auto sm:py-1 md:py-1.5 md:w-full'>Edit Profile</NavLink> */}
+            <NavLink to='update' className='py-1.5 w-full text-center border-[1px] border-blue-500 text-blue-500 rounded-lg cursor-pointer transition duration-200 ease-in-out transform hover:bg-blue-500 hover:text-white hover:shadow-lg active:bg-blue-600 sm:w-[80%] sm:mx-auto md:w-full'>
+              Edit Profile
+            </NavLink>
           </div>
         </div>
-        <div className='h-auto my-2 mx-3 w-60'>{data.bio}</div>
+        <div className='h-auto my-2 mx-3 w-64'>
+          {bioLines.map((line, index) => (
+            <p key={index}>
+              {line}
+            </p>
+          ))}
+        </div>
         <div className='w-full h-[2px] my-2 bg-black' />
         <div className='h-80 flex items-center justify-center font-semibold text-xl'>
           No Posts

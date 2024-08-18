@@ -11,11 +11,11 @@ function Footer() {
     if (!user) null
     else {
         return (
-            <div className='w-full mx-auto flex h-auto gap-2 border-2 border-black justify-evenly py-2 absolute bottom-0'>
-                <CgProfile size={45} className='' />
-                <IoCamera size={45} className='' />
-                <IoSearch size={45} className='' />
-                <BsChatFill size={45} className='' />
+            <div className='w-full mx-auto flex h-auto gap-2 border-2 border-black justify-evenly py-2'>
+                <CgProfile size={45} className='cursor-pointer' />
+                <IoCamera size={45} className='cursor-pointer' />
+                <IoSearch size={45} className='cursor-pointer' />
+                <BsChatFill size={45} className='cursor-pointer' />
             </div>
         )
     }
