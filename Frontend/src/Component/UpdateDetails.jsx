@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { getValidAccessToken } from './auth';
 
 const server = import.meta.env.VITE_SERVER;
 
@@ -45,20 +44,13 @@ function UpdateDetails() {
         navigate('/');
     };
 
-    const uploadImage = async (accessToken) => {
+    const uploadImage = async () => {
         if (selectedImage) {
             setLoading(true)
             const formData = new FormData();
             formData.append('profileImage', selectedImage);
             try {
-                await axios.post('http://localhost:8000/api/v1/users/update-profile-image', formData, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                setLoading(false)
-                setPopUp(true)
+                await axios.post('/api/v1/users/update-profile-image', formData);
             } catch (error) {
                 console.error('Error uploading image:', error);
                 setLoading(false)
@@ -74,16 +66,8 @@ function UpdateDetails() {
                 email: data.email,
                 bio: data.bio,
             };
-            const accessToken = await getValidAccessToken();
-            const response = await axios.post('http://localhost:8000/api/v1/users/update-account-details', details, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-
-            if (response.status === 200) {
-                await uploadImage(accessToken)
-            }
+            await axios.post('/api/v1/users/update-account-details', details);
+            await uploadImage()
             setTimeout(() => {
                 setLoading(false)
                 setPopUp(true)
@@ -96,12 +80,7 @@ function UpdateDetails() {
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
-                const accessToken = await getValidAccessToken();
-                const response = await axios.post('http://localhost:8000/api/v1/users/user-details', {}, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
+                const response = await axios.post('/api/v1/users/user-details');
 
                 const { email, fullName, bio, profileImage, createdAt, username } = response.data.data;
                 const dateObj = new Date(createdAt);

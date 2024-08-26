@@ -22,8 +22,7 @@ export const refreshAccessToken = async () => {
         const refreshToken = Cookies.get('refreshToken');
 
         if (!refreshToken) {
-            localStorage.setItem('user', JSON.stringify(false))
-            // throw new Error('No refresh token available')
+            throw new Error('No refresh token available')
         }
 
         const response = await axios.post('http://localhost:8000/api/v1/users/refresh-token', {
@@ -46,7 +45,5 @@ export const getValidAccessToken = async () => {
     if (isTokenExpired(accessToken)) {
         accessToken = await refreshAccessToken();
     }
-
-    localStorage.setItem('user', JSON.stringify(true))
     return accessToken;
 };

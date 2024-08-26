@@ -60,11 +60,14 @@ function Login() {
         if (form.username !== '' && form.email !== '' && form.password !== '') {
             setPopUp(true)
             setLoading(true)
-            axios.post('http://localhost:8000/api/v1/users/login', form)
+            axios.post('/api/v1/users/login', form, {
+                withCredentials: true
+            })
                 .then((response) => {
-                    const { accessToken, refreshToken } = response.data.data
-                    Cookies.set('accessToken', accessToken, { expires: 1, sameSite: 'None', secure: true });
-                    Cookies.set('refreshToken', refreshToken, { expires: 10, sameSite: 'None', secure: true });
+                    // console.log(response.data.data);
+                    // const { accessToken, refreshToken } = response.data.data
+                    // Cookies.set('accessToken', accessToken, { expires: 1, sameSite: 'None', secure: true });
+                    // Cookies.set('refreshToken', refreshToken, { expires: 10, sameSite: 'None', secure: true });
                     setTimeout(() => {
                         setForm({
                             email: "",
