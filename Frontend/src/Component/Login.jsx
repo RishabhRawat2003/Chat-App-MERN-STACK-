@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { json, NavLink } from 'react-router-dom';
+import React, { useState } from 'react'
+import { NavLink } from 'react-router-dom';
 import { PiHandWavingFill } from "react-icons/pi";
 import googleLogo from './Image/google.png'
 import { MdArrowOutward } from "react-icons/md";
@@ -64,10 +64,6 @@ function Login() {
                 withCredentials: true
             })
                 .then((response) => {
-                    // console.log(response.data.data);
-                    // const { accessToken, refreshToken } = response.data.data
-                    // Cookies.set('accessToken', accessToken, { expires: 1, sameSite: 'None', secure: true });
-                    // Cookies.set('refreshToken', refreshToken, { expires: 10, sameSite: 'None', secure: true });
                     setTimeout(() => {
                         setForm({
                             email: "",

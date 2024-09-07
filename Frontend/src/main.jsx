@@ -11,6 +11,8 @@ import Search from './Component/Search.jsx'
 import Camera from './Component/Camera.jsx'
 import Profile from './Component/Profile.jsx'
 import UpdateDetails from './Component/UpdateDetails.jsx'
+import SearchUserDetails from './Component/SearchUserDetails.jsx'
+import FollowerFollowing from './Component/FollowerFollowing.jsx'
 import './customcss.css'
 
 const router = createBrowserRouter(
@@ -26,6 +28,11 @@ const router = createBrowserRouter(
         <Route path="/search" element={<Search />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/update" element={<UpdateDetails />} />
+        <Route path="/search/:id" element={<SearchUserDetails />} />
+        <Route path="/:id/followers" element={<FollowerFollowing />} />
+        <Route path="/:id/following" element={<FollowerFollowing />} />
+        <Route path="/:id/followers/:id" element={<SearchUserDetails />} />
+        <Route path="/:id/following/:id" element={<SearchUserDetails />} />
       </Route>
     </>
   )

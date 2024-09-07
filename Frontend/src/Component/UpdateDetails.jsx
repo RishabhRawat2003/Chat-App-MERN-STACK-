@@ -123,10 +123,10 @@ function UpdateDetails() {
             </div>
             <p className='w-full h-auto my-3 text-center'>Account created at : {data.createdAt}</p>
             <div className='w-full h-auto my-5 px-4 flex flex-col relative z-0'>
-                <span className='text-lg font-semibold'>Username</span>
+                <span className='sm:text-lg font-semibold'>Username</span>
                 <input type="text" value={data.username} placeholder='Username' className='border-[1px] border-gray-500 mt-3 mb-1 h-10 px-3 bg-gray-100 rounded-md select-none outline-none' readOnly />
                 <span className='text-sm font-semibold mb-2'>Note: <span className='font-normal'>You can change it after every 6 months</span></span>
-                <span className='text-lg font-semibold'>FullName</span>
+                <span className='sm:text-lg font-semibold'>FullName</span>
                 <div className={`${loading ? 'flex' : 'hidden'} fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 `} >
                     <div className="bg-white p-6 rounded-lg shadow-lg text-center flex items-center justify-center flex-col w-60 h-40">
                         <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
@@ -147,9 +147,9 @@ function UpdateDetails() {
                     </div>
                 )}
                 <input type="text" value={data.fullName} placeholder='Fullname' name='fullName' onChange={handleChanges} className='border-[1px] border-gray-500 my-3 h-10 px-3 bg-gray-100 rounded-md' required />
-                <span className='text-lg font-semibold'>Email</span>
+                <span className='sm:text-lg font-semibold'>Email</span>
                 <input type="email" value={data.email} placeholder='Email' name='email' onChange={handleChanges} className='border-[1px] border-gray-500 my-3 h-10 px-3 bg-gray-100 rounded-md' required />
-                <span className='text-lg font-semibold'>Bio</span>
+                <span className='sm:text-lg font-semibold'>Bio</span>
                 <textarea name="bio" value={data.bio} onChange={handleChanges} className='border-[1px] border-gray-500 my-3 px-3 py-1 bg-gray-100 rounded-md h-40 resize-none' required></textarea>
             </div>
             <div className='mt-2 w-full h-auto flex justify-end mb-4'>

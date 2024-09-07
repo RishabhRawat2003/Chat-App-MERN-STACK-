@@ -16,7 +16,12 @@ app.use(cookieParser())
 
 
 import userRouter from "./routes/user.routes.js"
+import searchRouter from './routes/search.routes.js'
+import followersFollowingRouter from './routes/followersFollowing.routes.js'
+
 app.use("/api/v1/users", userRouter)
+app.use("/api/v1/search", searchRouter)
+app.use("/api/v1/users-details", followersFollowingRouter)
 
 
 export { app }

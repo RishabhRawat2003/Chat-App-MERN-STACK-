@@ -241,6 +241,18 @@ const updateProfileImage = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, user, "Profile image updated Successfully"))
 })
 
+const fetchUserDetailsForFollowersFollowing = asyncHandler(async (req, res) => {
+    const { id } = req.body
+    if (!id) {
+        throw new ApiError(400, "User ID is required")
+    }
+    const user = await User.findById(id).select("followers following username")
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, user, "user Details Fetched Successfully for getting followers and following list"))
+})
+
 export {
     userRegister,
     loginUser,
@@ -249,5 +261,6 @@ export {
     userDetails,
     changeCurrentPassword,
     updateAccountDetails,
-    updateProfileImage
+    updateProfileImage,
+    fetchUserDetailsForFollowersFollowing
 }
