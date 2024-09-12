@@ -21,4 +21,4 @@ const conversationSchema = new Schema(
     }
 )
 
-export const Conversation = mongoose.model("Message", conversationSchema)
+export const Conversation = mongoose.model("Conversation", conversationSchema)

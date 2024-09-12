@@ -35,7 +35,7 @@ function Profile() {
       setUserLoggedIn(false)
       setTimeout(() => {
         navigate('/login')
-
+        localStorage.removeItem("userId")
       }, 1000);
     } catch (error) {
       console.log("Error while logging out : ", error);
@@ -59,6 +59,7 @@ function Profile() {
           id: _id
         })
         setUserLoggedIn(true)
+        localStorage.setItem('userId',JSON.stringify(_id))
       } catch (error) {
         console.error('Error fetching user details:', error);
         navigate('/login')
@@ -110,7 +111,7 @@ function Profile() {
             </div>
             <div onClick={() => setLogoutPopUp(true)} className='group flex gap-2 items-center cursor-pointer p-2 rounded-lg active:bg-indigo-500 md:hover:bg-indigo-500 active:shadow-lg md:hover:shadow-lg'>
               <BiLogOut size={25} className='md:group-hover:text-white group-active:text-white md:size-8' />
-              <span className='text-lg font-semibold group-hover:text-white'>Logout</span>
+              <span className='text-lg font-semibold md:group-hover:text-white group-active:text-white'>Logout</span>
             </div>
           </div>
         </div>

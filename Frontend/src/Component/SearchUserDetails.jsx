@@ -16,7 +16,7 @@ function SearchUserDetails() {
         post: [],
         bio: '',
         isFollowing: '',
-        id:''
+        id: ''
     })
     const { id } = useParams()
 
@@ -29,7 +29,6 @@ function SearchUserDetails() {
             if (response.data.statusCode == 200) {
                 setFollowToggle(!followToggle)
             }
-            // console.log(response.data);
         } catch (error) {
             console.log('Failed to follow the user', error);
         }
@@ -44,7 +43,6 @@ function SearchUserDetails() {
             if (response.data.statusCode == 200) {
                 setFollowToggle(!followToggle)
             }
-            // console.log(response.data);
         } catch (error) {
             console.log('Failed to unfollow the user', error);
         }
@@ -57,7 +55,7 @@ function SearchUserDetails() {
                     searchedUserId: id
                 }
                 const response = await axios.post('/api/v1/search/searched-user-details', details);
-                const { username, fullName, followers, following, post, profileImage, bio, isFollowing ,_id} = response.data.data
+                const { username, fullName, followers, following, post, profileImage, bio, isFollowing, _id } = response.data.data
                 setData({
                     username,
                     fullName,
@@ -67,7 +65,7 @@ function SearchUserDetails() {
                     profileImage,
                     bio,
                     isFollowing,
-                    id:_id
+                    id: _id
                 })
             } catch (error) {
                 console.error('Error fetching user details:', error);
@@ -91,20 +89,20 @@ function SearchUserDetails() {
                             <span className='text-sm font-medium sm:text-base md:text-lg sm:font-semibold'>{data.post.length}</span>
                             <p className='sm:font-semibold md:text-base lg:text-lg xl:text-xl'>Posts</p>
                         </div>
-                        <div className='flex flex-col items-center mr-6 sm:mx-3 md:mx-4 xl:mx-6'>
+                        <NavLink to={`/${id}/followers`} className='flex flex-col items-center mr-6 sm:mx-3 md:mx-4 xl:mx-6'>
                             <span className='text-sm font-medium sm:text-base md:text-lg sm:font-semibold'>{data.followers.length}</span>
                             <p className='sm:font-semibold md:text-base lg:text-lg xl:text-xl'>Followers</p>
-                        </div>
-                        <div className='flex flex-col items-center'>
+                        </NavLink>
+                        <NavLink to={`/${id}/following`} className='flex flex-col items-center'>
                             <span className='text-sm font-medium sm:text-base md:text-lg sm:font-semibold'>{data.following.length}</span>
                             <p className='sm:font-semibold md:text-base lg:text-lg xl:text-xl'>Following</p>
-                        </div>
+                        </NavLink>
                     </div>
                     {
                         data.isFollowing
                             ? <div className='w-full h-7 ease-in-out transform sm:w-[80%] sm:mx-auto md:w-full flex items-center justify-around'>
                                 <p onClick={handleUnFollow} className='w-[45%] h-full text-center border-[1px] border-blue-500 text-blue-500 rounded-md cursor-pointer transition duration-200 ease-in-out transform hover:bg-blue-500 hover:text-white hover:shadow-lg active:bg-blue-600'>Unfollow</p>
-                                <p className="w-[45%] h-full text-center border border-gray-300 rounded-md cursor-pointer font-semibold bg-gray-100 text-gray-700 transition duration-200 ease-in-out md:hover:bg-blue-500 md:hover:text-white md:hover:border-blue-500 md:hover:shadow-md active:shadow-md active:text-white active:border-blue-500 active:bg-blue-600">Message</p>
+                                <NavLink to={"/conversations/"+ id} className="w-[45%] h-full text-center border border-gray-300 rounded-md cursor-pointer font-semibold bg-gray-100 text-gray-700 transition duration-200 ease-in-out md:hover:bg-blue-500 md:hover:text-white md:hover:border-blue-500 md:hover:shadow-md active:shadow-md active:text-white active:border-blue-500 active:bg-blue-600">Message</NavLink>
                             </div>
                             : <p onClick={handleFollow} className='w-[85%] mx-auto py-0.5 sm:py-1 sm:w-full text-center border-[1px] border-blue-500 text-blue-500 rounded-lg cursor-pointer transition duration-200 ease-in-out transform hover:bg-blue-500 hover:text-white hover:shadow-lg active:bg-blue-600 md:py-1.5 sm:mx-auto lg:w-full'>Follow</p>
                     }

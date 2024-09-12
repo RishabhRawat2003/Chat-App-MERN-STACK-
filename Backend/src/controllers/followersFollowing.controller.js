@@ -13,10 +13,19 @@ const followersFollowingsDetails = asyncHandler(async (req, res) => {
 
     try {
         const users = await User.find({ _id: { $in: id } }).select("username fullName profileImage")
+        const userFollowingIds = req.user.following.map(followingUserId => followingUserId.toString());
+        const userDetailsWithFollowStatus = users.map(user => {
+            user
+            const isFollowing = userFollowingIds.includes(user._id.toString());
 
+            return {
+                ...user.toObject(),
+                isFollowing
+            };
+        });
         return res
             .status(200)
-            .json(new ApiResponse(200, users, "fetched all followers or followings details "));
+            .json(new ApiResponse(200, userDetailsWithFollowStatus, "fetched all followers or followings details "));
     } catch (error) {
         return res.status(500).json(new ApiError(500, error.message, "Error fetching followers or followings details"))
     }

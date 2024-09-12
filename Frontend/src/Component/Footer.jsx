@@ -12,7 +12,7 @@ function Footer() {
             <NavLink to='/'><CgProfile size={40} className='cursor-pointer sm:size-10' /></NavLink>
             <NavLink to='camera'><IoCamera size={40} className='cursor-pointer sm:size-10' /></NavLink>
             <NavLink to='search'><IoSearch size={40} className='cursor-pointer sm:size-10' /></NavLink>
-            <NavLink to='chat'><BsChatFill size={40} className='cursor-pointer sm:size-10' /></NavLink>
+            <NavLink to='conversations'><BsChatFill size={40} className='cursor-pointer sm:size-10' /></NavLink>
         </div>
     )
 
