@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Conversation } from "../models/conversation.model.js";
 import { Message } from "../models/message.model.js";
+import { getReceiverSocketId, io } from "../app.js";
 
 const sendMessage = asyncHandler(async (req, res) => {
     try {
@@ -33,6 +34,12 @@ const sendMessage = asyncHandler(async (req, res) => {
 
         await Promise.all([conversation.save(), newMessage.save()])
 
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+            // io.to(<socket_id>).emit() used to send events to specific client
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
+
         return res
             .status(200)
             .json(new ApiResponse(200, newMessage, "Message sent Successfully"))
@@ -50,7 +57,7 @@ const getMessages = asyncHandler(async (req, res) => {
         const conversation = await Conversation.findOne({
             participants: { $all: [senderId, receiverId] }
         }).populate("messages")
-        
+
         if (!conversation) {
             return res
                 .status(200)

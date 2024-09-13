@@ -8,68 +8,109 @@ import { IoMdSend } from "react-icons/io";
 import { NavLink } from 'react-router-dom';
 import { MdOutlineChevronRight } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import io from "socket.io-client";
 
 const server = import.meta.env.VITE_SERVER
 
 
 function Chat() {
+    const [socket, setSocket] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
     const messageDivRef = useRef(null);
     const [userData, setUserData] = useState({
         username: '',
         profileImage: ''
-    })
-    const [messages, setMessages] = useState([])
-    const [message, setMessage] = useState('')
-    const [toggle, setToggle] = useState(false)
-    const { id } = useParams()
-    const navigate = useNavigate()
+    });
+    const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState('');
+    const [toggle, setToggle] = useState(false);
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const currentUser = JSON.parse(localStorage.getItem("userId"));
 
     function handleBack() {
-        navigate(-1)
+        navigate(-1);
     }
 
     async function handleSubmitMessage() {
         try {
             const messageData = {
                 message
-            }
-            const response = await axios.post(`/api/v1/message/send/${id}`, messageData)
-            setMessage('')
-            setMessages([...messages, response.data.data])
+            };
+            const response = await axios.post(`/api/v1/message/send/${id}`, messageData);
+            setMessage('');
+            setMessages((prevMessages) => [...prevMessages, response.data.data]);
+            setTimeout(() => {
+                messageDivRef.current.scrollTop = messageDivRef.current.scrollHeight;
+            }, 200);
         } catch (error) {
-            console.error('error while sending message', error)
+            console.error('Error while sending message', error);
         }
     }
 
     useEffect(() => {
         async function fetchUserDetails() {
             try {
-                const details = {
-                    searchedUserId: id
-                }
+                const details = { searchedUserId: id };
                 const response = await axios.post('/api/v1/search/searched-user-details', details);
-                const { username, profileImage } = response.data.data
-                setUserData({ username, profileImage })
+                const { username, profileImage } = response.data.data;
+                setUserData({ username, profileImage });
             } catch (error) {
-                console.log("Error while Fetching user Details", error)
+                console.log("Error while fetching user details", error);
             }
         }
+
         async function fetchPreviousMessages() {
             try {
-                const response = await axios.get(`/api/v1/message/${id}`)
-                setMessages(response.data.data)
+                const response = await axios.get(`/api/v1/message/${id}`);
+                setMessages(response.data.data);
             } catch (error) {
-                console.log("Error while Fetching previous messages", error)
+                console.log("Error while fetching previous messages", error);
             }
         }
-        fetchUserDetails()
-        fetchPreviousMessages()
+
+        fetchUserDetails();
+        fetchPreviousMessages();
+
         setTimeout(() => {
             messageDivRef.current.scrollTop = messageDivRef.current.scrollHeight;
-        }, 180);
-    }, [])
+        }, 200);
+    }, [id]);
 
+    useEffect(() => {
+        if (currentUser) {
+            const socketInstance = io(server, {
+                query: {
+                    userId: currentUser,
+                },
+            });
 
+            setSocket(socketInstance);
+
+            socketInstance.on("getOnlineUsers", (users) => {
+                setOnlineUsers(users);
+            });
+
+            return () => socketInstance.close();
+        } else {
+            if (socket) {
+                socket.close();
+                setSocket(null);
+            }
+        }
+    }, [currentUser, server]);
+
+    useEffect(() => {
+        if (!socket) return;
+        socket.on("newMessage", (newMessage) => {
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+            setTimeout(() => {
+                messageDivRef.current.scrollTop = messageDivRef.current.scrollHeight;
+            }, 200);
+        });
+
+        return () => socket.off("newMessage");
+    }, [socket]);
 
     return (
         <div className='w-full h-screen flex flex-col sm:w-[60%] lg:w-[50%] xl:w-[45%] 2xl:w-[40%] mx-auto relative'>
