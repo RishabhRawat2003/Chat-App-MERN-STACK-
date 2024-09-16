@@ -9,6 +9,9 @@ function Conversations() {
   const [chattingToUser, setChattingToUser] = useState([])
   const [username, setUsername] = useState('')
 
+  const Id = JSON.parse(localStorage.getItem("userId"))
+  
+
   useEffect(() => {
     async function loggedInUserDetails() {
       try {
@@ -21,7 +24,7 @@ function Conversations() {
     }
     async function getAllConversations() {
       try {
-        const response = await axios.post('/api/v1/message/all-conversations');
+        const response = await axios.post('/api/v1/message/all-conversations')
         if (response.data.statusCode === 200) setChattingToUser(response.data.data)
 
       } catch (error) {
@@ -42,7 +45,7 @@ function Conversations() {
               <img src={user.profileImage === '/temp/default.jpg' ? server + user.profileImage : user.profileImage} alt="profile image" className='rounded-full border-[1px] border-gray-500' />
               <div className='flex-1 h-full flex flex-col'>
                 <span className='font-semibold'>{user.username}</span>
-                <span className='text-gray-500 font-bold'>New Messages</span>
+                <span className={`${user.lastMessage.receiverId===Id ? user.lastMessage.read===false? 'text-blue-600 font-bold text-lg' : 'text-gray-500'  : 'text-gray-400' } font-semibold `}>{user.lastMessage.message}</span>
               </div>
             </NavLink>
           ))

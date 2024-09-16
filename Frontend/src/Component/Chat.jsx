@@ -7,7 +7,6 @@ import { FcGallery } from "react-icons/fc";
 import { IoMdSend } from "react-icons/io";
 import { NavLink } from 'react-router-dom';
 import { MdOutlineChevronRight } from "react-icons/md";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import io from "socket.io-client";
 
 const server = import.meta.env.VITE_SERVER
@@ -69,8 +68,17 @@ function Chat() {
             }
         }
 
+        async function messageRead() {
+            try {
+                const response = await axios.post(`/api/v1/message/read-message/${id}`)
+            } catch (error) {
+                console.log("Error while reading message", error);
+            }
+        }
+        
         fetchUserDetails();
         fetchPreviousMessages();
+        messageRead()
 
         setTimeout(() => {
             messageDivRef.current.scrollTop = messageDivRef.current.scrollHeight;
@@ -129,12 +137,9 @@ function Chat() {
                         </div>
                     </NavLink>
                 </div>
-                <div className='flex gap-4 px-2 items-center'>
-                    <BsThreeDotsVertical size={25} className='mr-3 cursor-pointer' onClick={() => setToggle(!toggle)} />
-                </div>
             </div>
 
-            <div ref={messageDivRef} className='w-full flex-grow overflow-y-auto p-3'>
+            <div ref={messageDivRef} className='w-full flex-grow overflow-y-auto p-3 scrollbar-none'>
                 {
                     messages.map((user, index) => (
                         user.senderId !== id
