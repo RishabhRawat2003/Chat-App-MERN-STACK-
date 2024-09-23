@@ -9,6 +9,9 @@ import { BiLogOut } from "react-icons/bi";
 import { IoMoonOutline } from "react-icons/io5";
 import { IoSunnyOutline } from "react-icons/io5";
 import { FaBug } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
+import { toggle } from './store/toggleSlice';
+
 
 const server = import.meta.env.VITE_SERVER
 
@@ -17,17 +20,21 @@ function Profile() {
   const [themeToggle, setThemeToggle] = useState(false)
   const [userLoggedIn, setUserLoggedIn] = useState(false)
   const [logoutPopUp, setLogoutPopUp] = useState(false)
+  const [posts, setPosts] = useState([])
   const [data, setData] = useState({
     username: '',
     fullName: '',
     profileImage: '',
     followers: [],
     following: [],
-    post: [],
     bio: '',
     id: ""
   })
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const currentUserId = JSON.parse(localStorage.getItem("userId"))
+
 
   async function logoutHandle() {
     try {
@@ -44,36 +51,44 @@ function Profile() {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-
       try {
         const response = await axios.post('/api/v1/users/user-details', {});
-        const { username, fullName, followers, following, post, profileImage, bio, _id } = response.data.data
+        const { username, fullName, followers, following, profileImage, bio, _id } = response.data.data
         setData({
           username,
           fullName,
           followers,
           following,
-          post,
           profileImage,
           bio,
           id: _id
         })
         setUserLoggedIn(true)
-        localStorage.setItem('userId',JSON.stringify(_id))
       } catch (error) {
         console.error('Error fetching user details:', error);
         navigate('/login')
       }
     };
     fetchUserDetails();
-
+    const fetchPosts = async () => {
+      try {
+        const data = {
+          userId: currentUserId
+        }
+        const response = await axios.post('/api/v1/posts/all-posts', data);
+        const post = response.data.data
+        setPosts(post)
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    }
+    fetchPosts()
   }, [])
-
 
   const bioLines = data.bio.trim().split('\n');
 
   if (!userLoggedIn) {
-    return (<div className="flex justify-center items-center min-h-screen">
+    return (<div className="flex justify-center items-center min-h-screen bg-white relative z-50">
       <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
     </div>)
   } else {
@@ -109,14 +124,14 @@ function Profile() {
                 </span>
               </div>
             </div>
-            <div onClick={() => setLogoutPopUp(true)} className='group flex gap-2 items-center cursor-pointer p-2 rounded-lg active:bg-indigo-500 md:hover:bg-indigo-500 active:shadow-lg md:hover:shadow-lg'>
+            <div onClick={() => { setLogoutPopUp(true); dispatch(toggle(true)) }} className='group flex gap-2 items-center cursor-pointer p-2 rounded-lg active:bg-indigo-500 md:hover:bg-indigo-500 active:shadow-lg md:hover:shadow-lg'>
               <BiLogOut size={25} className='md:group-hover:text-white group-active:text-white md:size-8' />
               <span className='text-lg font-semibold md:group-hover:text-white group-active:text-white'>Logout</span>
             </div>
           </div>
         </div>
         {logoutPopUp && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-40">
             <div className="bg-white rounded-lg shadow-lg p-6 w-80 text-center">
               <div className='w-full h-auto flex justify-center items-center mb-3'>
                 <span className='p-4 rounded-full bg-red-100'>
@@ -126,7 +141,7 @@ function Profile() {
               <h2 className="text-lg font-semibold mb-1">Logout</h2>
               <h2 className="text-base font-medium text-gray-500 mb-6">Are you sure you want to logout?</h2>
               <div onClick={logoutHandle} className='w-full h-auto bg-red-600 font-medium text-center text-white rounded-lg py-2 mb-4 cursor-pointer active:bg-red-700 hover:bg-red-700'>Yes, logout</div>
-              <div onClick={() => setLogoutPopUp(false)} className='w-full h-auto bg-gray-100 font-medium text-center text-black rounded-lg py-2 cursor-pointer active:bg-gray-200 hover:bg-gray-200'>Cancel</div>
+              <div onClick={() => { setLogoutPopUp(false); dispatch(toggle(false)) }} className='w-full h-auto bg-gray-100 font-medium text-center text-black rounded-lg py-2 cursor-pointer active:bg-gray-200 hover:bg-gray-200'>Cancel</div>
             </div>
           </div>
         )}
@@ -136,7 +151,7 @@ function Profile() {
           <div className='flex flex-col gap-4 mr-2 sm:mr-5 justify-between lg:mr-10'>
             <div className='flex'>
               <div className='flex flex-col items-center mx-6 sm:mx-3 md:mx-4 xl:mx-6'>
-                <span className='text-sm font-medium sm:text-base md:text-lg sm:font-semibold'>{data.post.length}</span>
+                <span className='text-sm font-medium sm:text-base md:text-lg sm:font-semibold'>{posts.length}</span>
                 <p className='sm:font-semibold md:text-base lg:text-lg xl:text-xl'>Posts</p>
               </div>
               <NavLink to={data.id + '/followers'} className='flex flex-col items-center mr-6 sm:mx-3 md:mx-4 xl:mx-6 cursor-pointer md:hover:bg-gray-50 active:bg-gray-50'>
@@ -160,9 +175,15 @@ function Profile() {
             </p>
           ))}
         </div>
-        <div className='w-full h-[2px] my-2 bg-black' />
-        <div className='h-80 flex items-center justify-center font-semibold text-xl'>
-          No Posts
+        <div className='w-full h-[2px] mt-2 bg-black' />
+        <div className={`${posts.length > 0 ? 'grid grid-cols-3 ' : 'flex '} h-auto mb-20 font-semibold text-xl gap-1 px-2 py-1 lg:gap-2`}>
+          {
+            posts.length > 0
+              ? posts.map((post, index) => (
+                <NavLink to={`/single-post/` + post._id} key={index} className='w-28 aspect-square flex justify-center items-center md:w-36 lg:w-40 xl:w-44 2xl:w-48 cursor-pointer border-[1px] border-black'><img src={post.image} alt="post" className='w-full h-full object-contain' /></NavLink>
+              ))
+              : <span className='w-full h-40 flex justify-center items-center'>No Posts</span>
+          }
         </div>
       </div>
     )

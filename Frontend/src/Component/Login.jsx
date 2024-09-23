@@ -72,6 +72,8 @@ function Login() {
                         })
                         setLoading(false)
                         setPopUp(false)
+                        const { _id } = response.data.data.user
+                        localStorage.setItem('userId', JSON.stringify(_id))
                         navigate('/')
                     }, 3000);
                 }).catch((error) => {

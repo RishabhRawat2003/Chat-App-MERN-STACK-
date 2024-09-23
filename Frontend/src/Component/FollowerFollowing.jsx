@@ -100,7 +100,7 @@ function FollowerFollowing() {
             </div>
             <div className='relative w-full h-[80vh] overflow-hidden'>
                 <div
-                    className={`absolute top-0 w-full h-full flex flex-col transition-transform duration-500 ease-in-out ${activeContainer === 'followers' ? 'transform translate-x-0' : 'transform -translate-x-full'
+                    className={`absolute top-0 w-full h-full flex flex-col transition-transform duration-500 ease-in-out mb-20 ${activeContainer === 'followers' ? 'transform translate-x-0' : 'transform -translate-x-full'
                         }`}
                 >
                     {
@@ -125,7 +125,7 @@ function FollowerFollowing() {
                     }
                 </div>
                 <div
-                    className={`absolute top-0 w-full h-full flex flex-col transition-transform duration-500 ease-in-out ${activeContainer === 'following' ? 'transform translate-x-0' : 'transform translate-x-full'
+                    className={`absolute top-0 w-full h-full flex flex-col transition-transform duration-500 ease-in-out mb-20 ${activeContainer === 'following' ? 'transform translate-x-0' : 'transform translate-x-full'
                         }`}
                 >
                     {

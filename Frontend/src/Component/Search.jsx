@@ -33,7 +33,7 @@ function Search() {
         </p>
       </div>
       <div className='w-full h-[1px] bg-black' />
-      <div className='w-full h-[80vh] flex flex-col p-2 gap-3 mt-2'>
+      <div className='w-full h-auto flex flex-col p-2 gap-3 mt-2 mb-20'>
         {
           usersArr.map((user, index) => (
             <NavLink to={user._id} key={index} className='bg-gray-100 w-full h-auto flex p-2 gap-3 cursor-pointer rounded-lg active:bg-gray-200 hover:bg-gray-200'>

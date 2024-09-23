@@ -152,7 +152,7 @@ function UpdateDetails() {
                 <span className='sm:text-lg font-semibold'>Bio</span>
                 <textarea name="bio" value={data.bio} onChange={handleChanges} className='border-[1px] border-gray-500 my-3 px-3 py-1 bg-gray-100 rounded-md h-40 resize-none' required></textarea>
             </div>
-            <div className='mt-2 w-full h-auto flex justify-end mb-4'>
+            <div className='mt-2 w-full h-auto flex justify-end mb-20'>
                 <div className='mr-5 w-56 flex justify-between items-center lg:w-64'>
                     <button onClick={handleCancel} className='bg-gray-200 border-2 border-gray-300 rounded-lg px-6 py-1 font-semibold active:bg-gray-300 md:hover:bg-gray-300 lg:px-7 lg:py-1.5 lg:text-lg'>Cancel</button>
                     <button onClick={updateChanges} className='bg-blue-500 border-2 border-blue-600 rounded-lg px-6 py-1 font-semibold text-white active:bg-blue-600 md:hover:bg-blue-600 lg:px-7 lg:py-1.5 lg:text-lg'>Update</button>

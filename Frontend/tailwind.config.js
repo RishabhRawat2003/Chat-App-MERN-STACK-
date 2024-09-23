@@ -11,11 +11,10 @@ export default {
     function ({ addUtilities }) {
       addUtilities({
         '.scrollbar-none': {
-          /* Hide scrollbar for modern browsers */
-          'scrollbar-width': 'none', /* Firefox */
-          '-ms-overflow-style': 'none', /* Internet Explorer 10+ */
+          'scrollbar-width': 'none',
+          '-ms-overflow-style': 'none',
           '&::-webkit-scrollbar': {
-            display: 'none', /* Chrome, Safari, Edge, and Opera */
+            display: 'none', 
           },
         },
       });

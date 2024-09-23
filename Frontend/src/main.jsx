@@ -15,6 +15,10 @@ import SearchUserDetails from './Component/SearchUserDetails.jsx'
 import FollowerFollowing from './Component/FollowerFollowing.jsx'
 import './customcss.css'
 import Chat from './Component/Chat.jsx'
+import { Provider } from 'react-redux'
+import store from './Component/store/store.js'
+import UploadPost from './Component/UploadPost.jsx'
+import SinglePost from './Component/SinglePost.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,14 +39,18 @@ const router = createBrowserRouter(
         <Route path="/:userId/followers/:id" element={<SearchUserDetails />} />
         <Route path="/:userId/following/:id" element={<SearchUserDetails />} />
         <Route path="/user-profile/:id" element={<SearchUserDetails />} />
+        <Route path="/single-post/:id" element={<SinglePost />} />
       </Route>
       <Route path="/conversations/:id" element={<Chat />} />
+      <Route path="/upload-post" element={<UploadPost />} />
     </>
   )
 )
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store} >
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>,
 )
