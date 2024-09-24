@@ -107,7 +107,7 @@ function SinglePost() {
         <>
             {
                 postDetails
-                    ? <div className='w-full h-auto flex flex-col'>
+                    ? <div className='w-full h-auto flex flex-col overflow-hidden'>
                         <div className='w-full h-auto flex py-2 justify-between items-center'>
                             <div className='w-auto h-auto flex items-center'>
                                 <BsArrowLeft size={25} className='ml-3 sm:size-8 cursor-pointer' onClick={handleBack} />
@@ -145,7 +145,7 @@ function SinglePost() {
                         <div className='w-full h-auto flex gap-2 items-center text-xs text-gray-600 font-semibold mt-5 md:text-sm'>
                             {postDetails.createdAt}
                         </div>
-                        <div className={`${commentsDiv ? 'absolute bottom-14 w-full h-[80vh] bg-gray-50 transition-all translate-y-0 ease-in-out duration-300 flex flex-col border-x-[1px] border-gray-400 border-t-[1px] rounded-t-xl' : 'absolute bottom-14 w-full h-[80vh] bg-gray-100 transition-all translate-y-[80vh] ease-in-out duration-300'} `}>
+                        <div className={`${commentsDiv ? 'absolute bottom-14 w-full h-[80vh] bg-gray-50 flex flex-col border-x-[1px] border-gray-400 border-t-[1px] rounded-t-xl z-20' : 'hidden'} `}>
                             <div className='w-full h-auto flex justify-end items-center p-3'><IoCloseOutline size={30} className='cursor-pointer' onClick={() => setCommentsDiv(false)} /></div>
                             <div className='flex-1 w-full h-auto overflow-y-scroll flex flex-col py-2 px-3 gap-3'>
                                 {

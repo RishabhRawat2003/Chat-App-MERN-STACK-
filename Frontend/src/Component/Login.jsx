@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { FiAlertTriangle } from "react-icons/fi";
 import { IoEyeOff } from "react-icons/io5";
 import { IoEye } from "react-icons/io5";
-import Cookies from 'js-cookie'
 import axios from 'axios';
 
 function Login() {

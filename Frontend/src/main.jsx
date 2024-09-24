@@ -19,6 +19,8 @@ import { Provider } from 'react-redux'
 import store from './Component/store/store.js'
 import UploadPost from './Component/UploadPost.jsx'
 import SinglePost from './Component/SinglePost.jsx'
+import Settings from './Component/Settings.jsx'
+import ChangePassword from './Component/ChangePassword.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +42,8 @@ const router = createBrowserRouter(
         <Route path="/:userId/following/:id" element={<SearchUserDetails />} />
         <Route path="/user-profile/:id" element={<SearchUserDetails />} />
         <Route path="/single-post/:id" element={<SinglePost />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings/change-password" element={<ChangePassword />} />
       </Route>
       <Route path="/conversations/:id" element={<Chat />} />
       <Route path="/upload-post" element={<UploadPost />} />

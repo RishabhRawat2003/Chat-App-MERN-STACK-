@@ -101,10 +101,10 @@ function Profile() {
             <IoCloseOutline size={30} className='cursor-pointer mx-4' onClick={() => setToggleSidebar(false)} />
           </div>
           <div className='flex flex-col w-full h-auto gap-4 px-2 my-4'>
-            <div className='group flex gap-2 items-center cursor-pointer p-2 rounded-lg active:bg-indigo-500 md:hover:bg-indigo-500 active:shadow-lg md:hover:shadow-lg'>
+            <NavLink to='/settings' className='group flex gap-2 items-center cursor-pointer p-2 rounded-lg active:bg-indigo-500 md:hover:bg-indigo-500 active:shadow-lg md:hover:shadow-lg'>
               <IoMdSettings size={25} className='md:group-hover:text-white group-active:text-white md:size-8' />
               <span className='text-lg font-semibold md:group-hover:text-white group-active:text-white'>Settings</span>
-            </div>
+            </NavLink>
             <div className='group flex gap-2 items-center cursor-pointer p-2 rounded-lg active:bg-indigo-500 md:hover:bg-indigo-500 active:shadow-lg md:hover:shadow-lg'>
               <IoNotificationsOutline size={25} className='md:group-hover:text-white group-active:text-white md:size-8' />
               <span className='text-lg font-semibold md:group-hover:text-white group-active:text-white'>Notifications</span>
