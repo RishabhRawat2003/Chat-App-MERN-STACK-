@@ -53,11 +53,13 @@ import searchRouter from './routes/search.routes.js'
 import followersFollowingRouter from './routes/followersFollowing.routes.js'
 import messageRouter from './routes/message.routes.js'
 import postRouter from './routes/post.routes.js'
+import commentRouter from './routes/comment.routes.js'
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/search", searchRouter)
 app.use("/api/v1/users-details", followersFollowingRouter)
 app.use("/api/v1/message", messageRouter)
 app.use("/api/v1/posts", postRouter)
+app.use("/api/v1/comments", commentRouter)
 
 export { app, server, io }

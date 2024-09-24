@@ -253,6 +253,20 @@ const fetchUserDetailsForFollowersFollowing = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, user, "user Details Fetched Successfully for getting followers and following list"))
 })
 
+const deleteAccount = asyncHandler(async (req, res) => {
+    const userId = req.user?._id
+
+    if (!userId) {
+        throw new ApiError(400, "User ID is required")
+    }
+
+    await User.findByIdAndDelete(userId)
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, {}, "Account Deleted Successfully"))
+})
+
 export {
     userRegister,
     loginUser,
@@ -262,5 +276,6 @@ export {
     changeCurrentPassword,
     updateAccountDetails,
     updateProfileImage,
-    fetchUserDetailsForFollowersFollowing
+    fetchUserDetailsForFollowersFollowing,
+    deleteAccount
 }

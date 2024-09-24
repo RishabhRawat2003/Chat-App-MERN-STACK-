@@ -6,6 +6,9 @@ import { FaHeart } from "react-icons/fa";
 import { FaComment } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
+import { IoCloseOutline } from "react-icons/io5";
+import { MdDeleteOutline } from "react-icons/md";
+import { IoMdSend } from "react-icons/io";
 import axios from 'axios';
 
 function SinglePost() {
@@ -19,8 +22,10 @@ function SinglePost() {
         createdAt: '',
         ownerId: ''
     })
+    const [commentInput, setCommentInput] = useState('')
     const [postDeleteToggle, setPostDeleteToggle] = useState(false)
     const [postLikeRefresh, setPostLikeRefresh] = useState(false)
+    const [commentsDiv, setCommentsDiv] = useState(false)
     const { id } = useParams()
     const navigate = useNavigate()
     const currentUserId = JSON.parse(localStorage.getItem("userId"))
@@ -47,11 +52,33 @@ function SinglePost() {
         navigate(-1)
     }
 
+    async function deleteComment(commentId) {
+        try {
+            const response = await axios.post('/api/v1/comments/delete-comment', { postId: id, commentId });
+            if (response.status === 200) setPostLikeRefresh(!postLikeRefresh)
+        } catch (error) {
+            console.log("Error while deleting Comment", error);
+        }
+    }
+
+    async function submitComment() {
+        try {
+            const response = await axios.post('/api/v1/comments/send-comment', { postId: id, comment: commentInput });
+            setCommentInput('')
+            if (response.status === 200) setPostLikeRefresh(!postLikeRefresh)
+        } catch (error) {
+            console.error("Error while submitting comment", error)
+        }
+    }
+
     useEffect(() => {
         const fetechSinglePostDetails = async () => {
             try {
-                const response = await axios.post('/api/v1/posts/single-post', { postId: id });
-                const { caption, comments, createdAt, image, like, owner } = response.data.data
+                const response = await axios.post('/api/v1/posts/single-post', { postId: id })
+                const response2 = await axios.post('/api/v1/comments/all-comments', { postId: id })
+                const commentsArr = response2.data.data
+                // console.log(response.data.data);
+                const { caption, createdAt, image, like, owner } = response.data.data
                 const dateObj = new Date(createdAt);
                 const day = String(dateObj.getDate()).padStart(2, '0');
                 const month = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -63,7 +90,7 @@ function SinglePost() {
                     postImage: image,
                     postText: caption,
                     likes: like,
-                    comments: comments,
+                    comments: commentsArr,
                     createdAt: formattedDate,
                     ownerId: owner._id
                 })
@@ -74,11 +101,13 @@ function SinglePost() {
         fetechSinglePostDetails()
     }, [postLikeRefresh])
 
+
+
     return (
         <>
             {
                 postDetails
-                    ? <div className='w-full h-auto flex flex-col relative'>
+                    ? <div className='w-full h-auto flex flex-col'>
                         <div className='w-full h-auto flex py-2 justify-between items-center'>
                             <div className='w-auto h-auto flex items-center'>
                                 <BsArrowLeft size={25} className='ml-3 sm:size-8 cursor-pointer' onClick={handleBack} />
@@ -105,10 +134,9 @@ function SinglePost() {
                                 {postDetails.likes.length} Likes
                             </div>
                             <div className='flex gap-2 items-center'>
-                                <FaComment size={25} className='hover:fill-red-500 cursor-pointer fill-gray-300' />
+                                <FaComment onClick={() => setCommentsDiv(true)} size={25} className='hover:fill-gray-500 cursor-pointer fill-gray-300' />
                                 {postDetails.comments.length} Comments
                             </div>
-
                         </div>
                         <div className='w-full h-auto flex gap-2 items-center'>
                             <span className='font-semibold text-lg'>{postDetails.username}</span>
@@ -116,6 +144,40 @@ function SinglePost() {
                         </div>
                         <div className='w-full h-auto flex gap-2 items-center text-xs text-gray-600 font-semibold mt-5 md:text-sm'>
                             {postDetails.createdAt}
+                        </div>
+                        <div className={`${commentsDiv ? 'absolute bottom-14 w-full h-[80vh] bg-gray-50 transition-all translate-y-0 ease-in-out duration-300 flex flex-col border-x-[1px] border-gray-400 border-t-[1px] rounded-t-xl' : 'absolute bottom-14 w-full h-[80vh] bg-gray-100 transition-all translate-y-[80vh] ease-in-out duration-300'} `}>
+                            <div className='w-full h-auto flex justify-end items-center p-3'><IoCloseOutline size={30} className='cursor-pointer' onClick={() => setCommentsDiv(false)} /></div>
+                            <div className='flex-1 w-full h-auto overflow-y-scroll flex flex-col py-2 px-3 gap-3'>
+                                {
+                                    commentsDiv ?
+                                        postDetails.comments.map((comment, index) => (
+                                            <div key={index} className='w-full flex border-[1px] border-gray-300 px-3 min-h-16 items-center rounded-md md:hover:bg-gray-100 cursor-pointer]'>
+                                                <img src={comment.owner.profileImage} alt="owner Image" className='w-12 h-12 rounded-full border-[1px] border-gray-300' />
+                                                <div className='flex-1 flex flex-col h-full px-4 justify-center'>
+                                                    <span className='text-black font-semibold text-lg'>{comment.owner.username}</span>
+                                                    <span className='text-gray-600 text-sm'>{comment.content}</span>
+                                                </div>
+                                                {
+                                                    comment.owner._id === currentUserId || postDetails.ownerId === currentUserId
+                                                        ? <div className='w-10 h-full flex justify-center items-center'>
+                                                            <MdDeleteOutline onClick={() => deleteComment(comment._id)} size={25} className='md:hover:text-red-500 active:text-red-500 cursor-pointer' />
+                                                        </div>
+                                                        : null
+                                                }
+                                            </div>
+                                        )) : null
+                                }
+                            </div>
+                            <div className='w-full h-14 rounded-xl flex justify-center'>
+                                <div className='w-[80%] flex h-10 border-[1px] border-gray-500 bg-gray-100 rounded-xl'>
+                                    <input type="text" value={commentInput} onChange={(e) => setCommentInput(e.target.value)} placeholder='Write your comment here..' className='outline-none px-3 bg-gray-100 flex-1 rounded-xl' />
+                                    <div className='p-1.5 px-2 rounded-full flex items-center cursor-pointer'>
+                                        <span onClick={submitComment}>
+                                            <IoMdSend size={20} />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     : <div className="flex justify-center items-center min-h-screen bg-white relative z-50">
