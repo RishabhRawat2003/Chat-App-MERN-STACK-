@@ -7,6 +7,7 @@ import { MdOutlineReportProblem } from "react-icons/md";
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { toggle } from './store/toggleSlice';
+import axios from 'axios';
 
 
 function Settings() {
@@ -18,11 +19,12 @@ function Settings() {
     async function deleteAccount() {
         try {
             const response = await axios.post('/api/v1/users/delete-account', {});
+            localStorage.removeItem("userId")
             if (response.status === 200) {
                 navigate('/login')
             }
         } catch (error) {
-            console.log('Error while deleting Account');
+            console.log('Error while deleting Account',error);
         }
     }
 

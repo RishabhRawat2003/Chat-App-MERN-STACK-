@@ -89,6 +89,7 @@ function Profile() {
       }
     }
     fetchPosts()
+    dispatch(toggle(false))
   }, [])
 
   const bioLines = data.bio.trim().split('\n');

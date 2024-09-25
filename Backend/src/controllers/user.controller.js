@@ -256,14 +256,25 @@ const fetchUserDetailsForFollowersFollowing = asyncHandler(async (req, res) => {
 const deleteAccount = asyncHandler(async (req, res) => {
     const userId = req.user?._id
 
+    console.log(userId);
+
+
     if (!userId) {
         throw new ApiError(400, "User ID is required")
     }
 
     await User.findByIdAndDelete(userId)
 
+    const options = {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax'
+    }
+
     return res
         .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
         .json(new ApiResponse(200, {}, "Account Deleted Successfully"))
 })
 
