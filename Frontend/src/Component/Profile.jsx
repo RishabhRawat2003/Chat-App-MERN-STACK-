@@ -11,7 +11,7 @@ import { IoSunnyOutline } from "react-icons/io5";
 import { FaBug } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
 import { toggle } from './store/toggleSlice';
-
+import { getValidAccessToken } from './auth';
 
 const server = import.meta.env.VITE_SERVER
 
@@ -52,7 +52,10 @@ function Profile() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.post('/api/v1/users/user-details', {});
+        const accessToken = await getValidAccessToken();
+        const response = await axios.post('/api/v1/users/user-details', {}, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
         const { username, fullName, followers, following, profileImage, bio, _id } = response.data.data
         setData({
           username,
@@ -72,10 +75,13 @@ function Profile() {
     fetchUserDetails();
     const fetchPosts = async () => {
       try {
+        const accessToken = await getValidAccessToken();
         const data = {
           userId: currentUserId
         }
-        const response = await axios.post('/api/v1/posts/all-posts', data);
+        const response = await axios.post('/api/v1/posts/all-posts', data, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
         const post = response.data.data
         setPosts(post)
       } catch (error) {

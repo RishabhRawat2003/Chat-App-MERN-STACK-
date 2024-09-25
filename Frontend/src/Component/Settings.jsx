@@ -5,10 +5,15 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { AiFillDelete } from "react-icons/ai";
 import { MdOutlineReportProblem } from "react-icons/md";
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { toggle } from './store/toggleSlice';
+
 
 function Settings() {
     const [deleteAccountPop, setDeleteAccountPop] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
 
     async function deleteAccount() {
         try {
@@ -36,7 +41,7 @@ function Settings() {
                     <RiLockPasswordFill size={25} className='' />
                     Change Password
                 </NavLink>
-                <div onClick={() => setDeleteAccountPop(!deleteAccountPop)} className='w-full h-auto py-3 flex gap-5 items-center cursor-pointer bg-gray-50 rounded-lg shadow-md px-2 md:text-lg font-semibold active:bg-indigo-500 md:hover:bg-indigo-500 active:text-white md:hover:text-white'>
+                <div onClick={() => {setDeleteAccountPop(!deleteAccountPop); dispatch(toggle(true)) }} className='w-full h-auto py-3 flex gap-5 items-center cursor-pointer bg-gray-50 rounded-lg shadow-md px-2 md:text-lg font-semibold active:bg-indigo-500 md:hover:bg-indigo-500 active:text-white md:hover:text-white'>
                     <AiFillDelete size={25} className='' />
                     Delete Account
                 </div>
@@ -52,7 +57,7 @@ function Settings() {
                         <h2 className="text-lg font-semibold mb-1">Delete Account</h2>
                         <h2 className="text-base font-medium text-gray-500 mb-6">Are you sure you want to delete your Account?</h2>
                         <div onClick={deleteAccount} className='w-full h-auto bg-red-600 font-medium text-center text-white rounded-lg py-2 mb-4 cursor-pointer active:bg-red-700 hover:bg-red-700'>Yes</div>
-                        <div onClick={() => setDeleteAccountPop(!deleteAccountPop)} className='w-full h-auto bg-gray-100 font-medium text-center text-black rounded-lg py-2 cursor-pointer active:bg-gray-200 hover:bg-gray-200'>No</div>
+                        <div onClick={() => { setDeleteAccountPop(!deleteAccountPop); dispatch(toggle(false)) }} className='w-full h-auto bg-gray-100 font-medium text-center text-black rounded-lg py-2 cursor-pointer active:bg-gray-200 hover:bg-gray-200'>No</div>
                     </div>
                 </div>
             )}

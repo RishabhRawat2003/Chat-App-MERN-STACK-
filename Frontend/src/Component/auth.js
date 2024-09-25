@@ -1,49 +1,30 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
-
-
-export const isTokenExpired = (token) => {
-    if (!token) return true;
-
-    try {
-        const decodedToken = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-
-        return decodedToken.exp < currentTime;
-    } catch (error) {
-        console.error('Failed to decode token', error);
-        return true;
-    }
-};
 
 export const refreshAccessToken = async () => {
     try {
-        const refreshToken = Cookies.get('refreshToken');
-
-        if (!refreshToken) {
-            throw new Error('No refresh token available')
-        }
-
-        const response = await axios.post('http://localhost:8000/api/v1/users/refresh-token', {
-            token: refreshToken,
+        const response = await axios.post('/api/v1/users/refresh-token', {}, {
+            withCredentials: true,
         });
 
-        const newAccessToken = response.data.accessToken;
-        Cookies.set('accessToken', newAccessToken);
-
-        return newAccessToken;
+        return response.data.accessToken;
     } catch (error) {
-        // console.error('Failed to refresh token', error);
         throw error;
     }
 };
 
 export const getValidAccessToken = async () => {
-    let accessToken = Cookies.get('accessToken');
+    try {
+        const response = await axios.post('/api/v1/users/user-details', {
+            withCredentials: true,
+        });
 
-    if (isTokenExpired(accessToken)) {
-        accessToken = await refreshAccessToken();
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            await refreshAccessToken();
+            return getValidAccessToken();
+        } else {
+            throw error;
+        }
     }
-    return accessToken;
 };

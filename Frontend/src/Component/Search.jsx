@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 const server = import.meta.env.VITE_SERVER
 
+
 function Search() {
   const [searchUsername, setSearchUsername] = useState('')
   const [usersArr, setUsersArr] = useState([])
@@ -18,6 +19,7 @@ function Search() {
         const response = await axios.post('/api/v1/search/search-username', data)
         setUsersArr(searchUsername === '' ? [] : response.data.data)
       } catch (error) {
+        setUsersArr([])
         console.error(error);
       }
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import { PiHandWavingFill } from "react-icons/pi";
 import googleLogo from './Image/google.png'
@@ -81,6 +81,13 @@ function Login() {
                 })
         }
     }
+
+    useEffect(() => {
+        if (JSON.parse(localStorage.getItem("userId"))) {
+            navigate('/')
+        }
+
+    }, [])
 
     return (
         <>

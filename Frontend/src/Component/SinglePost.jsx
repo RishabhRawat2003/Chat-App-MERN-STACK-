@@ -106,7 +106,7 @@ function SinglePost() {
     return (
         <>
             {
-                postDetails
+                postDetails.username
                     ? <div className='w-full h-auto flex flex-col overflow-hidden'>
                         <div className='w-full h-auto flex py-2 justify-between items-center'>
                             <div className='w-auto h-auto flex items-center'>
